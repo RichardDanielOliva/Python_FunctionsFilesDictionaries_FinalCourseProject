@@ -25,6 +25,7 @@ with open("files/negative_words.txt") as pos_f:
     for lin in pos_f:
         if lin[0] != ';' and lin[0] != '\n':
             negative_words.append(lin.strip())
+
             
 def get_neg(strSentences):
     strSentences = strip_punctuation(strSentences)
@@ -36,21 +37,27 @@ def get_neg(strSentences):
             if word == negativeWord:
                 count+=1
     return count
+
     
 def strip_punctuation(strWord):
     for charPunct in punctuation_chars:
         strWord = strWord.replace(charPunct, "")
     return strWord
 
-resultingDataFile.write("Number of Retweets, Number of Replies, Positive Score, Negative Score, Net Score")
-resultingDataFile.write("\n")
 
-linesPTDF =  projectTwitterDataFile.readlines()
-headerDontUsed= linesPTDF.pop(0)
-for linesTD in linesPTDF:
-    listTD = linesTD.strip().split(',')
-    resultingDataFile.write("{}, {}, {}, {}, {}".format(listTD[1], listTD[2], get_pos(listTD[0]), get_neg(listTD[0]), (get_pos(listTD[0])-get_neg(listTD[0]))))    
+def writeInDataFile(resultingDataFile):
+    resultingDataFile.write("Number of Retweets, Number of Replies, Positive Score, Negative Score, Net Score")
     resultingDataFile.write("\n")
 
+    linesPTDF =  projectTwitterDataFile.readlines()
+    headerDontUsed= linesPTDF.pop(0)
+    for linesTD in linesPTDF:
+        listTD = linesTD.strip().split(',')
+        resultingDataFile.write("{}, {}, {}, {}, {}".format(listTD[1], listTD[2], get_pos(listTD[0]), get_neg(listTD[0]), (get_pos(listTD[0])-get_neg(listTD[0]))))    
+        resultingDataFile.write("\n")
+
+        
+
+writeInDataFile(resultingDataFile)
 projectTwitterDataFile.close()
 resultingDataFile.close()
