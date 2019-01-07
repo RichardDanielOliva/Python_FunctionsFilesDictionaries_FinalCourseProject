@@ -12,7 +12,7 @@ which takes one parameter, a string which represents a word, and removes charact
 which takes one parameter, a string which represents a one or more sentences, and calculates how many words in the string are considered positive words. Use the list, positive_words to determine what words will count as positive. The function should return a positive integer - how many occurances there are of positive words in the text.
 #### 3. def get_neg(strSentences):
 which takes one parameter, a string which represents a one or more sentences, and calculates how many words in the string are considered negative words. Use the list, negative_words to determine what words will count as negative. The function should return a positive integer - how many occurances there are of negative words in the text.
-#### writeInDataFile(resultingDataFile):
+#### 4. def writeInDataFile(resultingDataFile):
 which takes one parameter, a string which represents all data in project_twitter_data.csv, and write a csv file called resulting_data.csv, which contains the Number of Retweets, Number of Replies, Positive Score (which is how many happy words are in the tweet), Negative Score (which is how many angry words are in the tweet), and the Net Score (how positive or negative the text is overall) for each tweet. The file have its headers in that order.
 ## Scatterplot
 <img src="/images/ScatterplotTwitterData.png" alt="ScatterplotTwitterData" width="400"/>
