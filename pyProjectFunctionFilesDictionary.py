@@ -1,5 +1,3 @@
-projectTwitterDataFile = open("files/project_twitter_data.csv","r")
-resultingDataFile = open("files/resulting_data.csv","w")
 
 punctuation_chars = ["'", '"', ",", ".", "!", ":", ";", '#', '@']
 # lists of words to use
@@ -8,17 +6,7 @@ with open("files/positive_words.txt") as pos_f:
     for lin in pos_f:
         if lin[0] != ';' and lin[0] != '\n':
             positive_words.append(lin.strip())
-            
-def get_pos(strSentences):
-    strSentences = strip_punctuation(strSentences)
-    listStrSentences= strSentences.split()
-    
-    count=0
-    for word in listStrSentences:
-        for positiveWord in positive_words:
-            if word == positiveWord:
-                count+=1
-    return count
+
 
 negative_words = []
 with open("files/negative_words.txt") as pos_f:
@@ -26,38 +14,44 @@ with open("files/negative_words.txt") as pos_f:
         if lin[0] != ';' and lin[0] != '\n':
             negative_words.append(lin.strip())
 
-            
-def get_neg(strSentences):
-    strSentences = strip_punctuation(strSentences)
-    listStrSentences = strSentences.split()
-    
-    count=0
-    for word in listStrSentences:
-        for negativeWord in negative_words:
-            if word == negativeWord:
-                count+=1
+def strip_punctuation(str):
+    for char in punctuation_chars:
+        if char in str:
+            str = str.replace(char, "")
+    return str            
+
+def get_pos(str):
+    lines = strip_punctuation(str)
+    words = lines.lower().split()
+    count = 0
+    for word in words:
+        if word in positive_words:
+            count = count + 1
     return count
 
-    
-def strip_punctuation(strWord):
-    for charPunct in punctuation_chars:
-        strWord = strWord.replace(charPunct, "")
-    return strWord
+def get_neg(str):
+    lines = strip_punctuation(str)
+    words = lines.lower().split()
+    count = 0
+    for word in words:
+        if word in negative_words:
+            count = count + 1
+    return count   
 
+fh = open("files/project_twitter_data.csv", 'r')
+lines = fh.readlines()
+new_file = open("files/resulting_data.csv", 'w')
+new_file.write("""Number_of_Retweets ,Number_of_Replies, Positive_Score, Negative_Score, Net_Score""")
+new_file.write("\n")
 
-def writeInDataFile(resultingDataFile):
-    resultingDataFile.write("Number of Retweets, Number of Replies, Positive Score, Negative Score, Net Score")
-    resultingDataFile.write("\n")
+for line in lines[1:]:
+    content = line.strip().split(",")
+    a = get_pos(content[0])
+    b = get_neg(content[0])
+    #row_string = ",".join([content[1], content[2], str(a), str(b), str(a-b)])
+    row_string = '{},{},{},{},{}'.format(content[1], content[2], str(a), str(b), str(a-b))
+    new_file.write(row_string)
+    new_file.write("\n")
 
-    linesPTDF =  projectTwitterDataFile.readlines()
-    headerDontUsed= linesPTDF.pop(0)
-    for linesTD in linesPTDF:
-        listTD = linesTD.strip().split(',')
-        resultingDataFile.write("{}, {}, {}, {}, {}".format(listTD[1], listTD[2], get_pos(listTD[0]), get_neg(listTD[0]), (get_pos(listTD[0])-get_neg(listTD[0]))))    
-        resultingDataFile.write("\n")
-
-        
-
-writeInDataFile(resultingDataFile)
-projectTwitterDataFile.close()
-resultingDataFile.close()
+new_file.close()
+fh.close()
